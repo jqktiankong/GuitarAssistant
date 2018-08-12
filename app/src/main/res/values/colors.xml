@@ -4,8 +4,15 @@
     <color name="colorPrimaryDark">#FFB001</color>
     <color name="colorAccent">#FF4081</color>
 
-    <color name="colorBackground">#2D3951</color>
     <color name="white">#FFFFFF</color>
-    <color name="green">#00FF00</color>
-    <color name="red">#FF0000</color>
+
+    <color name="colorlyricsViewBackground">#696969</color>
+    <color name="colorlyric">#918E85</color>
+    <color name="colorlyricSelect">#FFFFFF</color>
+    <color name="colorCenterLine">#918E85</color>
+
+    <color name="colorScore">#918E85</color>
+    <color name="colorScoreSelect">#FFFFFF</color>
+
+    <color name="colorPlayed">#FF3333</color>
 </resources>
