@@ -1,13 +1,13 @@
 package com.example.jqk.guitarassistant;
 
 public class Lyric extends Data{
-    private char lyric;
+    private String lyric;
 
-    public char getLyric() {
+    public String getLyric() {
         return lyric;
     }
 
-    public void setLyric(char lyric) {
+    public void setLyric(String lyric) {
         this.lyric = lyric;
     }
 }

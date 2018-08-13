@@ -29,9 +29,9 @@ public class LyricsView extends View {
     private int inViewHeight;
     private int viewHeight, viewWidth;
     private int scrllY = 0;
-
-    private int playNum = 26;
-
+    private int lineCount = 7;
+    private int horizontalCount = 13;
+    private int playNum = horizontalCount * (lineCount / 2);
     private int itemHeight;
 
     private int centerLineY;
@@ -43,8 +43,6 @@ public class LyricsView extends View {
     private Paint playedPaint;
 
     private boolean isScrolling = false;
-
-    private float mLastMotionY;
 
     public LyricsView(Context context) {
         super(context);
@@ -62,59 +60,6 @@ public class LyricsView extends View {
     }
 
     public void init() {
-        lyrics = new ArrayList<Lyric>();
-        lyricsCopy = new ArrayList<Lyric>();
-        String string = "----作词:赵雷----"
-                + "----作曲:赵雷----"
-                + "让我掉下眼泪的不只昨夜的酒"
-                + "让我掉下眼泪的不只昨夜的酒"
-                + "让我掉下眼泪的不只昨夜的酒"
-                + "让我掉下眼泪的不只昨夜的酒"
-                + "让我掉下眼泪的不只昨夜的酒"
-                + "让我掉下眼泪的不只昨夜的酒"
-                + "让我掉下眼泪的不只昨夜的酒"
-                + "让我掉下眼泪的不只昨夜的酒"
-                + "让我掉下眼泪的不只昨夜的酒"
-                + "让我掉下眼泪的不只昨夜的酒";
-        for (char c : string.toCharArray()) {
-            Lyric lyric = new Lyric();
-            lyric.setLyric(c);
-            lyric.setPlayed(false);
-            lyrics.add(lyric);
-
-            Lyric lyric1 = new Lyric();
-            lyric1.setLyric(c);
-            lyric1.setPlayed(false);
-            lyricsCopy.add(lyric1);
-        }
-
-        tunes = new ArrayList<Tune>();
-        tunesCopy = new ArrayList<Tune>();
-
-        String str = "............."
-                + "............."
-                + "5112533512165"
-                + "5112533512165"
-                + "5112533512165"
-                + "5112533512165"
-                + "5112533512165"
-                + "5112533512165"
-                + "5112533512165"
-                + "5112533512165"
-                + "5112533512165"
-                + "5112533512165";
-        for (char c : str.toCharArray()) {
-            Tune tune = new Tune();
-            tune.setTune(c);
-            tune.setPlayed(false);
-            tunes.add(tune);
-
-            Tune tune1 = new Tune();
-            tune1.setTune(c);
-            tune1.setPlayed(false);
-            tunesCopy.add(tune1);
-        }
-
         // 歌词笔触
         lyricPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         lyricPaint.setColor(getResources().getColor(R.color.colorlyric));
@@ -157,13 +102,71 @@ public class LyricsView extends View {
         setBackgroundColor(getResources().getColor(R.color.colorlyricsViewBackground));
     }
 
+    public void setLyrics(List<String> lyrics) {
+        this.lyrics = new ArrayList<Lyric>();
+        lyricsCopy = new ArrayList<Lyric>();
+
+        for (int i = 0; i < horizontalCount * (lineCount / 2); i++) {
+            Lyric lyric = new Lyric();
+            lyric.setLyric("");
+            lyric.setPlayed(false);
+            this.lyrics.add(lyric);
+
+            Lyric lyric1 = new Lyric();
+            lyric1.setLyric("");
+            lyric1.setPlayed(false);
+            lyricsCopy.add(lyric1);
+        }
+
+        for (String c : lyrics) {
+            Lyric lyric = new Lyric();
+            lyric.setLyric(c);
+            lyric.setPlayed(false);
+            this.lyrics.add(lyric);
+
+            Lyric lyric1 = new Lyric();
+            lyric1.setLyric(c);
+            lyric1.setPlayed(false);
+            lyricsCopy.add(lyric1);
+        }
+    }
+
+    public void setTunes(List<String> tunes) {
+        this.tunes = new ArrayList<Tune>();
+        tunesCopy = new ArrayList<Tune>();
+
+        for (int i = 0; i < horizontalCount * (lineCount / 2); i++) {
+            Tune tune = new Tune();
+            tune.setTune("");
+            tune.setPlayed(false);
+            this.tunes.add(tune);
+
+            Tune tune1 = new Tune();
+            tune1.setTune("");
+            tune1.setPlayed(false);
+            tunesCopy.add(tune1);
+        }
+
+        for (String c : tunes) {
+            Tune tune = new Tune();
+            tune.setTune(c);
+            tune.setPlayed(false);
+            this.tunes.add(tune);
+
+            Tune tune1 = new Tune();
+            tune1.setTune(c);
+            tune1.setPlayed(false);
+            tunesCopy.add(tune1);
+        }
+    }
+
     @Override
     protected void onSizeChanged(int w, int h, int oldw, int oldh) {
         super.onSizeChanged(w, h, oldw, oldh);
 
         viewWidth = getMeasuredWidth();
         viewHeight = getMeasuredHeight();
-        itemHeight = viewHeight / 5;
+        itemHeight = viewHeight / lineCount;
         centerLineY = viewHeight / 2;
 
         Paint.FontMetricsInt lyricFm = lyricPaint.getFontMetricsInt();
@@ -286,8 +289,8 @@ public class LyricsView extends View {
             return;
         }
 
-        if (scrllY >= inViewHeight - viewHeight / 2) {
-            scrllY = inViewHeight - viewHeight / 2;
+        if (scrllY >= inViewHeight - viewHeight / 2 - itemHeight / 2) {
+            scrllY = inViewHeight - viewHeight / 2 - itemHeight / 2;
 
             for (int i = 0; i < lyrics.size(); i++) {
                 lyrics.get(i).setBaseline(lyricsCopy.get(i).getBaseline() - scrllY);
@@ -399,7 +402,7 @@ public class LyricsView extends View {
 
     public void resetLines() {
 
-        if (scrllY == 0 || scrllY == inViewHeight - viewHeight / 2) {
+        if (scrllY == 0 || scrllY == inViewHeight - viewHeight / 2 - itemHeight / 2) {
             return;
         }
 

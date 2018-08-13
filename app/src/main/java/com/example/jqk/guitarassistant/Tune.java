@@ -1,13 +1,13 @@
 package com.example.jqk.guitarassistant;
 
-public class Tune extends Data{
-    private char tune;
+public class Tune extends Data {
+    private String tune;
 
-    public char getTune() {
+    public String getTune() {
         return tune;
     }
 
-    public void setTune(char tune) {
+    public void setTune(String tune) {
         this.tune = tune;
     }
 }

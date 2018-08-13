@@ -2,11 +2,11 @@
 <resources>
     <color name="colorPrimary">#FFB001</color>
     <color name="colorPrimaryDark">#FFB001</color>
-    <color name="colorAccent">#FF4081</color>
+    <color name="colorAccent">#FCF925</color>
 
     <color name="white">#FFFFFF</color>
 
-    <color name="colorlyricsViewBackground">#696969</color>
+    <color name="colorlyricsViewBackground">#2D3951</color>
     <color name="colorlyric">#918E85</color>
     <color name="colorlyricSelect">#FFFFFF</color>
     <color name="colorCenterLine">#918E85</color>
@@ -14,5 +14,9 @@
     <color name="colorScore">#918E85</color>
     <color name="colorScoreSelect">#FFFFFF</color>
 
-    <color name="colorPlayed">#FF3333</color>
+    <color name="colorPlayed">#FCF925</color>
+    <color name="colorVolumeBg">#FFB001</color>
+
+    <color name="seekbarbg">#2D3951</color>
+    <color name="seekbar">#FCF925</color>
 </resources>
