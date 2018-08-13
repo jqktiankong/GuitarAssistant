@@ -31,7 +31,7 @@ public class LyricsView extends View {
     private int scrllY = 0;
     private int lineCount = 7;
     private int horizontalCount = 13;
-    private int playNum = horizontalCount * (lineCount / 2);
+    private int playNum;
     private int itemHeight;
 
     private int centerLineY;
@@ -168,6 +168,8 @@ public class LyricsView extends View {
         viewHeight = getMeasuredHeight();
         itemHeight = viewHeight / lineCount;
         centerLineY = viewHeight / 2;
+
+        playNum = horizontalCount * (lineCount / 2);
 
         Paint.FontMetricsInt lyricFm = lyricPaint.getFontMetricsInt();
 
@@ -474,6 +476,65 @@ public class LyricsView extends View {
             e.printStackTrace();
             mediaPlayer.release();//释放资源
         }
+    }
 
+    public void resetView(List<String> l, List<String> t) {
+
+        setLyrics(l);
+        setTunes(t);
+
+        viewWidth = getMeasuredWidth();
+        viewHeight = getMeasuredHeight();
+        itemHeight = viewHeight / lineCount;
+        centerLineY = viewHeight / 2;
+
+        playNum = horizontalCount * (lineCount / 2);
+
+        Paint.FontMetricsInt lyricFm = lyricPaint.getFontMetricsInt();
+
+        int line = 0;
+        int x = 0;
+        for (int i = 0; i < lyrics.size(); i++) {
+
+            if (i == 0) {
+                line = 0;
+            }
+
+            if (i % 13 == 0 && i != 0) {
+                line++;
+            }
+
+            x = i % 13 * viewWidth / 13 + viewWidth / 13 / 2;
+            lyrics.get(i).setBaseline(line * itemHeight + itemHeight / 2 - (lyricFm.bottom - lyricFm.top) / 2 - lyricFm.top);
+            lyrics.get(i).setX(x);
+            lyrics.get(i).setLineNum(line);
+            lyricsCopy.get(i).setBaseline(line * itemHeight + itemHeight / 2 - (lyricFm.bottom - lyricFm.top) / 2 - lyricFm.top);
+            lyricsCopy.get(i).setX(x);
+            lyricsCopy.get(i).setLineNum(line);
+        }
+
+        inViewHeight = itemHeight * (line + 1);
+
+        Paint.FontMetricsInt scoreFm = turnPaint.getFontMetricsInt();
+
+        line = 0;
+        x = 0;
+        for (int i = 0; i < tunes.size(); i++) {
+            if (i == 0) {
+                line = 0;
+            }
+
+            if (i % 13 == 0 && i != 0) {
+                line++;
+            }
+
+            x = i % 13 * viewWidth / 13 + viewWidth / 13 / 2;
+            tunes.get(i).setBaseline(line * itemHeight + itemHeight / 2 - (scoreFm.bottom - scoreFm.top) / 2);
+            tunes.get(i).setX(x);
+            tunesCopy.get(i).setBaseline(line * itemHeight + itemHeight / 2 - (scoreFm.bottom - scoreFm.top) / 2);
+            tunesCopy.get(i).setX(x);
+        }
+
+        invalidate();
     }
 }

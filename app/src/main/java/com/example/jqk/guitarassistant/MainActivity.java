@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private LyricsView lyricsView;
     private Button play;
     private SeekBar seekBar;
+    private ImageView left, right, reset;
 
     private String geci;
     private String jianpu;
@@ -41,6 +43,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         title.setText("成都");
         play.setOnClickListener(this);
+        left.setOnClickListener(this);
+        reset.setOnClickListener(this);
+        right.setOnClickListener(this);
         seekBar.setOnSeekBarChangeListener(this);
         // 获取歌词简谱
         geci = getResources().getString(R.string.geci1);
@@ -62,6 +67,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         title = findViewById(R.id.title);
         play = findViewById(R.id.play);
         seekBar = findViewById(R.id.seekBar);
+        left = findViewById(R.id.left);
+        right = findViewById(R.id.right);
+        reset = findViewById(R.id.reset);
     }
 
     public void setVolume(int volume) {
@@ -74,6 +82,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.play:
                 lyricsView.play();
+                break;
+            case R.id.left:
+
+                break;
+            case R.id.right:
+
+                break;
+            case R.id.reset:
+                lyricsView.resetView(Utils.lyricTransform(geci), Utils.lyricTransform(jianpu));
                 break;
         }
     }
