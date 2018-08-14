@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context=".MainActivity">
+    tools:context=".lyric.LyricActivity">
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -72,7 +72,7 @@
         android:layout_weight="1"
         android:background="@color/colorlyricsViewBackground">
 
-        <com.example.jqk.guitarassistant.LyricsView
+        <com.example.jqk.guitarassistant.lyric.LyricsView
             android:id="@+id/lyricsView"
             android:layout_width="match_parent"
             android:layout_height="match_parent"

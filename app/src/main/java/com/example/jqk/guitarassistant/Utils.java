@@ -11,7 +11,6 @@ public class Utils {
         str = str.replace("，", ",");
         str = str.replace(" ", "");
         List<String> result = new ArrayList<String>();
-        Log.d("123", "str = " + str);
         StringBuffer stringBuffer = new StringBuffer(str);
         for (int i = 0; i < stringBuffer.length(); i++) {
             if ((stringBuffer.charAt(i) + "").equals(",")) {

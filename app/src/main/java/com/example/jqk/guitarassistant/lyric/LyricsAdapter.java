@@ -1,4 +1,4 @@
-package com.example.jqk.guitarassistant;
+package com.example.jqk.guitarassistant.lyric;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

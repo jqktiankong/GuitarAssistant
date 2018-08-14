@@ -1,4 +1,4 @@
-package com.example.jqk.guitarassistant;
+package com.example.jqk.guitarassistant.lyric;
 
 public class Tune extends Data {
     private String tune;

@@ -1,4 +1,4 @@
-package com.example.jqk.guitarassistant;
+package com.example.jqk.guitarassistant.lyric;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;
@@ -14,6 +14,8 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.animation.LinearInterpolator;
+
+import com.example.jqk.guitarassistant.R;
 
 import java.io.IOException;
 import java.util.ArrayList;

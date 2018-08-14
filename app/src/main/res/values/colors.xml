@@ -19,4 +19,6 @@
 
     <color name="seekbarbg">#2D3951</color>
     <color name="seekbar">#FCF925</color>
+    <color name="transparent">#FFFFFFFF</color>
+    <color name="guitarbg">#F3F3F3</color>
 </resources>

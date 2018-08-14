@@ -1,11 +1,9 @@
-package com.example.jqk.guitarassistant;
+package com.example.jqk.guitarassistant.lyric;
 
-import android.app.UiAutomation;
 import android.content.Context;
 import android.media.AudioManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
@@ -14,10 +12,10 @@ import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.example.jqk.guitarassistant.R;
+import com.example.jqk.guitarassistant.Utils;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
+public class LyricActivity extends AppCompatActivity implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
 
     private TextView title;
     private LyricsView lyricsView;
@@ -37,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_lyric);
 
         init();
 
@@ -46,7 +44,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         left.setOnClickListener(this);
         reset.setOnClickListener(this);
         right.setOnClickListener(this);
-        seekBar.setOnSeekBarChangeListener(this);
         // 获取歌词简谱
         geci = getResources().getString(R.string.geci1);
         jianpu = getResources().getString(R.string.jianpu1);
@@ -60,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         // 设置当前音量显示
         seekBar.setMax(maxVolume);
         seekBar.setProgress(currentVolume);
+        seekBar.setOnSeekBarChangeListener(this);
     }
 
     public void init() {
@@ -97,7 +95,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, progress, 0);
+        currentVolume = progress;
+        mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, currentVolume, 0);
     }
 
     @Override
