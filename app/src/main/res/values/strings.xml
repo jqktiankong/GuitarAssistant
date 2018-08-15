@@ -39,4 +39,40 @@
         12345
         12345
         12345</string>
+
+    <string-array name="songs">
+        <item>爱你</item>
+        <item>成都</item>
+        <item>答案</item>
+        <item>情非得已</item>
+        <item>天空之城</item>
+        <item>同桌的你</item>
+        <item>学猫叫</item>
+        <item>夜空中最亮的星</item>
+        <item>追光者</item>
+    </string-array>
+
+    <string-array name="names">
+        <item>爱你1</item>
+        <item>成都1</item>
+        <item>答案1</item>
+        <item>情非得已1</item>
+        <item>天空之城1</item>
+        <item>同桌的你1</item>
+        <item>学猫叫1</item>
+        <item>夜空中最亮的星1</item>
+        <item>追光者1</item>
+    </string-array>
+
+    <string-array name="stars">
+        <item>1</item>
+        <item>2</item>
+        <item>1</item>
+        <item>2</item>
+        <item>2</item>
+        <item>1</item>
+        <item>2</item>
+        <item>2</item>
+        <item>2</item>
+    </string-array>
 </resources>

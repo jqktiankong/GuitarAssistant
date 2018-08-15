@@ -21,4 +21,9 @@
     <color name="seekbar">#FCF925</color>
     <color name="transparent">#FFFFFFFF</color>
     <color name="guitarbg">#F3F3F3</color>
+
+    <color name="searchTextColor">#FFB001</color>
+    <color name="mainColorbg">#F3F3F3</color>
+    <color name="defaultTvColor">#000000</color>
+    <color name="line">#918E85</color>
 </resources>

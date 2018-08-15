@@ -13,7 +13,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import com.example.jqk.guitarassistant.R;
-import com.example.jqk.guitarassistant.Utils;
+import com.example.jqk.guitarassistant.util.Utils;
 
 public class LyricActivity extends AppCompatActivity implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
 
@@ -21,7 +21,7 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
     private LyricsView lyricsView;
     private Button play;
     private SeekBar seekBar;
-    private ImageView left, right, reset;
+    private ImageView left, right, reset, back;
 
     private String geci;
     private String jianpu;
@@ -44,6 +44,7 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
         left.setOnClickListener(this);
         reset.setOnClickListener(this);
         right.setOnClickListener(this);
+        back.setOnClickListener(this);
         // 获取歌词简谱
         geci = getResources().getString(R.string.geci1);
         jianpu = getResources().getString(R.string.jianpu1);
@@ -68,6 +69,7 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
         left = findViewById(R.id.left);
         right = findViewById(R.id.right);
         reset = findViewById(R.id.reset);
+        back = findViewById(R.id.back);
     }
 
     public void setVolume(int volume) {
@@ -89,6 +91,9 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
                 break;
             case R.id.reset:
                 lyricsView.resetView(Utils.lyricTransform(geci), Utils.lyricTransform(jianpu));
+                break;
+            case R.id.back:
+                finish();
                 break;
         }
     }

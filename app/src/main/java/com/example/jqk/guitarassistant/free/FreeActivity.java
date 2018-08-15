@@ -27,7 +27,7 @@ public class FreeActivity extends AppCompatActivity implements View.OnClickListe
         View.OnTouchListener,
         SeekBar.OnSeekBarChangeListener {
 
-    private ImageView img;
+    private ImageView img, back;
     private ImageView guitarImg;
     private RelativeLayout guitarParentView;
     private LinearLayout imgParentView;
@@ -60,6 +60,7 @@ public class FreeActivity extends AppCompatActivity implements View.OnClickListe
         imgParentView = findViewById(R.id.imgParentView);
         play = findViewById(R.id.play);
         seekBar = findViewById(R.id.seekBar);
+        back = findViewById(R.id.back);
 
         imgd = findViewById(R.id.imgd);
         imga = findViewById(R.id.imga);
@@ -78,6 +79,7 @@ public class FreeActivity extends AppCompatActivity implements View.OnClickListe
         imge.setOnTouchListener(this);
 
         play.setOnClickListener(this);
+        back.setOnClickListener(this);
 
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
         maxVolume = mAudioManager.getStreamMaxVolume(AudioManager.STREAM_MUSIC);
@@ -201,6 +203,9 @@ public class FreeActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()) {
             case R.id.play:
 //                playSound(tune);
+                break;
+            case R.id.back:
+                finish();
                 break;
         }
     }

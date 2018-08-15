@@ -1,4 +1,4 @@
-package com.example.jqk.guitarassistant;
+package com.example.jqk.guitarassistant.util;
 
 import android.util.Log;
 
