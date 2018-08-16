@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@drawable/icon_stauts_bg"
+        android:gravity="center">
+
+        <ImageView
+            android:id="@+id/header"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:src="@drawable/icon_status_bg1" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:id="@+id/xinlvView"
+            android:layout_width="match_parent"
+            android:layout_height="81dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp">
+
+                <ImageView
+                    android:id="@+id/xinlv"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/icon_xinlv" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toEndOf="@+id/xinlv"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1.5"
+                        android:text="心率  82次/分"
+                        android:textColor="@color/colorlyricsViewBackground"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:textColor="@color/line" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:text="刚刚更新"
+                        android:textColor="@color/colorlyricsViewBackground" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/icon_go" />
+            </RelativeLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/line" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/shuimianView"
+            android:layout_width="match_parent"
+            android:layout_height="81dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp">
+
+                <ImageView
+                    android:id="@+id/shuimian"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/icon_shuimian" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toEndOf="@+id/shuimian"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1.5"
+                        android:text="睡眠  8小时"
+                        android:textColor="@color/colorlyricsViewBackground"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:textColor="@color/line" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:text="13小时前更新"
+                        android:textColor="@color/colorlyricsViewBackground" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/icon_go" />
+            </RelativeLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/line" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/duanlianView"
+            android:layout_width="match_parent"
+            android:layout_height="81dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="10dp"
+            android:orientation="vertical">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="60dp"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp">
+
+                <ImageView
+                    android:id="@+id/duanlian"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:src="@drawable/icon_duanlian" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="60dp"
+                    android:layout_marginLeft="10dp"
+                    android:layout_toEndOf="@+id/duanlian"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/songName"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_weight="1.5"
+                        android:text="锻炼  10分钟健走"
+                        android:textColor="@color/colorlyricsViewBackground"
+                        android:textSize="20sp" />
+
+                    <TextView
+                        android:id="@+id/name"
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:textColor="@color/line" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="0dp"
+                        android:layout_weight="1"
+                        android:text="5小时前更新"
+                        android:textColor="@color/colorlyricsViewBackground" />
+                </LinearLayout>
+
+                <ImageView
+                    android:layout_width="15dp"
+                    android:layout_height="15dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/icon_go" />
+            </RelativeLayout>
+
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:background="@color/line" />
+        </LinearLayout>
+    </LinearLayout>
+</LinearLayout>

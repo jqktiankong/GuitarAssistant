@@ -85,7 +85,7 @@ public class DBManager {
      *
      * @param songs
      */
-    public void insertUserList(List<Song> songs) {
+    public void insertSongList(List<Song> songs) {
         if (songs == null || songs.isEmpty()) {
             return;
         }
@@ -100,7 +100,7 @@ public class DBManager {
      *
      * @param song
      */
-    public void deleteUser(Song song) {
+    public void deleteSong(Song song) {
         DaoMaster daoMaster = new DaoMaster(getWritableDatabase());
         DaoSession daoSession = daoMaster.newSession();
         SongDao SongDao = daoSession.getSongDao();
@@ -122,7 +122,7 @@ public class DBManager {
      *
      * @param list
      */
-    public void deleteUsers(List<Song> list) {
+    public void deleteSongs(List<Song> list) {
         DaoMaster daoMaster = new DaoMaster(getWritableDatabase());
         DaoSession daoSession = daoMaster.newSession();
         SongDao SongDao = daoSession.getSongDao();
@@ -135,7 +135,7 @@ public class DBManager {
      *
      * @param Song
      */
-    public void updateUser(Song Song) {
+    public void updateSong(Song Song) {
         DaoMaster daoMaster = new DaoMaster(getWritableDatabase());
         DaoSession daoSession = daoMaster.newSession();
         SongDao SongDao = daoSession.getSongDao();
@@ -145,7 +145,7 @@ public class DBManager {
     /**
      * 查询用户列表
      */
-    public List<Song> queryUserList() {
+    public List<Song> querySongList() {
         DaoMaster daoMaster = new DaoMaster(getReadableDatabase());
         DaoSession daoSession = daoMaster.newSession();
         SongDao SongDao = daoSession.getSongDao();
@@ -157,7 +157,7 @@ public class DBManager {
     /**
      * 根据条件查询用户列表
      */
-    public List<Song> queryUserList(String Song) {
+    public List<Song> querySongList(String Song) {
         DaoMaster daoMaster = new DaoMaster(getReadableDatabase());
         DaoSession daoSession = daoMaster.newSession();
         SongDao songDao = daoSession.getSongDao();
@@ -167,15 +167,13 @@ public class DBManager {
         return list;
     }
 
-    public boolean queryUserListResult(String Song) {
+    public boolean querySongListResult(String Song) {
         DaoMaster daoMaster = new DaoMaster(getReadableDatabase());
         DaoSession daoSession = daoMaster.newSession();
         SongDao songDao = daoSession.getSongDao();
         QueryBuilder<Song> qb = songDao.queryBuilder();
         qb.where(SongDao.Properties.SongName.eq(Song));
         List<Song> list = qb.list();
-
-        Log.d("123", "查询结果 = " + list.toString());
 
         if (list.size() == 0) {
             return false;

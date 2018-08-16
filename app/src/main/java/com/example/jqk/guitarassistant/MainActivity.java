@@ -5,12 +5,15 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.jqk.guitarassistant.music.MusicFragment;
+import com.example.jqk.guitarassistant.status.StatusFragment;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -24,6 +27,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private VoiceFragment voiceFragment;
     private StatusFragment statusFragment;
     private MineFragment mineFragment;
+
+    private long firstTime = 0;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -156,5 +161,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 mineTv.setTextColor(getResources().getColor(R.color.searchTextColor));
                 break;
         }
+    }
+
+    @Override
+    public boolean onKeyUp(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            // 双击退出程序
+            long secondTime = System.currentTimeMillis();
+            if (secondTime - firstTime > 1500) {// 如果两次按键时间间隔大于800毫秒，则不退出
+                Toast.makeText(MainActivity.this, "再次点击退出程序",
+                        Toast.LENGTH_SHORT).show();
+                firstTime = secondTime;// 更新firstTime
+                return true;
+            } else {
+                finish();// 否则退出程序
+            }
+        }
+        return super.onKeyUp(keyCode, event);
     }
 }

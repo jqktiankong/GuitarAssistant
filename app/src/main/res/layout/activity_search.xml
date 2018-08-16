@@ -59,6 +59,7 @@
                     android:src="@drawable/icon_main_search" />
 
                 <EditText
+                    android:id="@+id/search"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_centerVertical="true"
@@ -67,6 +68,8 @@
                     android:background="@null"
                     android:gravity="center_vertical"
                     android:hint="输入艺术家或歌曲名"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
                     android:textColor="@color/searchTextColor"
                     android:textColorHint="@color/searchTextColor"
                     android:textSize="16sp" />
@@ -80,9 +83,10 @@
         android:gravity="center_vertical">
 
         <TextView
+            android:id="@+id/prompt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginLeft="20dp"
+            android:layout_marginLeft="18dp"
             android:text="最近搜索"
             android:textSize="18sp" />
     </LinearLayout>
@@ -94,10 +98,11 @@
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="20dp"
-        android:layout_marginRight="20dp">
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp">
 
     </android.support.v7.widget.RecyclerView>
 </LinearLayout>
