@@ -26,4 +26,6 @@
     <color name="mainColorbg">#F3F3F3</color>
     <color name="defaultTvColor">#000000</color>
     <color name="line">#918E85</color>
+
+    <color name="mine_line">#F0F0F0</color>
 </resources>

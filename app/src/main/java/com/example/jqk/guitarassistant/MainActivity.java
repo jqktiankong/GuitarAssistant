@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.jqk.guitarassistant.mine.MineFragment;
 import com.example.jqk.guitarassistant.music.MusicFragment;
 import com.example.jqk.guitarassistant.status.StatusFragment;
 

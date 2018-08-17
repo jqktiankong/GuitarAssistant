@@ -9,12 +9,18 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".login.LoginActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity android:name=".RegisterActivity">
+
+        </activity>
+        <activity android:name=".MainActivity">
+
         </activity>
         <activity android:name=".lyric.LyricActivity">
 
@@ -25,14 +31,25 @@
         <activity android:name=".music.MusicActivity"></activity>
         <activity android:name=".search.SearchActivty"></activity>
         <activity android:name=".status.HeaderActivity"></activity>
-        <activity android:name=".status.XinlvActivity"
+        <activity
+            android:name=".status.XinlvActivity"
             android:theme="@style/BlackAppTheme"></activity>
-        <activity android:name=".status.DuanlianActivity"
+        <activity
+            android:name=".status.DuanlianActivity"
             android:theme="@style/BlackAppTheme"></activity>
-        <activity android:name=".status.ShuimianActivity"
+        <activity
+            android:name=".status.ShuimianActivity"
             android:theme="@style/BlackAppTheme"></activity>
-        <activity android:name=".status.ChenmaiActivity"
+        <activity
+            android:name=".status.ChenmaiActivity"
             android:theme="@style/BlackAppTheme"></activity>
+        <activity android:name=".mine.DisanfangActivity"></activity>
+        <activity android:name=".mine.ShezhiActivity"></activity>
+        <activity android:name=".mine.ShiyongbangzhuActivity"></activity>
+        <activity android:name=".mine.UserActivity"></activity>
+        <activity android:name=".mine.WodemubiaoActivity"></activity>
+        <activity android:name=".mine.WodeshebeiActivity"></activity>
+        <activity android:name=".mine.YijianfankuiActivity"></activity>
     </application>
 
 </manifest>
