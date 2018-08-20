@@ -380,15 +380,15 @@ public class LyricsView extends View {
 
         // 播放相应的声音
 
-//        playSound(tunes.get(playNum).getTune() + "");
+        playSound(tunes.get(playNum).getTune() + "");
 
         int i = lyrics.get(playNum).getBaseline() - centerLineY >= 0 ?
                 (lyrics.get(playNum).getBaseline() - centerLineY + itemHeight / 2) / itemHeight
                 : (lyrics.get(playNum).getBaseline() - centerLineY - itemHeight / 2) / itemHeight;
-//
-//        Log.d("123", "lyrics.get(playNum).getBaseline() = " + lyrics.get(playNum).getBaseline());
-//        Log.d("123", "i = " + i);
-//        Log.d("123", "");
+
+        Log.d("lyric", "lyrics.get(playNum).getBaseline() = " + lyrics.get(playNum).getBaseline());
+        Log.d("lyric", "i = " + i);
+        Log.d("lyric", "");
 
         int distance = i * itemHeight;
 
@@ -427,28 +427,49 @@ public class LyricsView extends View {
         Uri uri = null;
         switch (note) {
             case "1":
-                uri = Uri.parse(uriStr + R.raw.a1m);
+                uri = Uri.parse(uriStr + R.raw.z1);
                 break;
             case "2":
-                uri = Uri.parse(uriStr + R.raw.a2m);
+                uri = Uri.parse(uriStr + R.raw.z2);
                 break;
             case "3":
-                uri = Uri.parse(uriStr + R.raw.a3m);
+                uri = Uri.parse(uriStr + R.raw.z3);
                 break;
             case "4":
-                uri = Uri.parse(uriStr + R.raw.a4m);
+                uri = Uri.parse(uriStr + R.raw.z4);
                 break;
             case "5":
-                uri = Uri.parse(uriStr + R.raw.a5m);
+                uri = Uri.parse(uriStr + R.raw.z5);
                 break;
             case "6":
-                uri = Uri.parse(uriStr + R.raw.a6m);
+                uri = Uri.parse(uriStr + R.raw.z6);
                 break;
             case "7":
-                uri = Uri.parse(uriStr + R.raw.a7m);
+                uri = Uri.parse(uriStr + R.raw.z7);
                 break;
-            default:
-                uri = Uri.parse(uriStr + R.raw.a1m);
+            case "e":
+                uri = Uri.parse(uriStr + R.raw.d5);
+                break;
+            case "f":
+                uri = Uri.parse(uriStr + R.raw.d6);
+                break;
+            case "g":
+                uri = Uri.parse(uriStr + R.raw.d7);
+                break;
+            case "A":
+                uri = Uri.parse(uriStr + R.raw.g1);
+                break;
+            case "B":
+                uri = Uri.parse(uriStr + R.raw.g2);
+                break;
+            case "C":
+                uri = Uri.parse(uriStr + R.raw.g3);
+                break;
+            case "D":
+                uri = Uri.parse(uriStr + R.raw.g4);
+                break;
+            case "E":
+                uri = Uri.parse(uriStr + R.raw.g5);
                 break;
 
         }
@@ -482,15 +503,10 @@ public class LyricsView extends View {
 
     public void resetView(List<String> l, List<String> t) {
 
+        playNum = horizontalCount * (lineCount / 2);
+
         setLyrics(l);
         setTunes(t);
-
-        viewWidth = getMeasuredWidth();
-        viewHeight = getMeasuredHeight();
-        itemHeight = viewHeight / lineCount;
-        centerLineY = viewHeight / 2;
-
-        playNum = horizontalCount * (lineCount / 2);
 
         Paint.FontMetricsInt lyricFm = lyricPaint.getFontMetricsInt();
 
@@ -536,7 +552,7 @@ public class LyricsView extends View {
             tunesCopy.get(i).setBaseline(line * itemHeight + itemHeight / 2 - (scoreFm.bottom - scoreFm.top) / 2);
             tunesCopy.get(i).setX(x);
         }
-
-        invalidate();
+        scrllY = 0;
+        scroll(0);
     }
 }

@@ -95,17 +95,6 @@
         android:text="登录"
         android:textSize="18sp" />
 
-    <Button
-        android:id="@+id/register"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginLeft="40dp"
-        android:layout_marginRight="40dp"
-        android:layout_marginTop="20dp"
-        android:background="@color/colorVolumeBg"
-        android:text="注册"
-        android:textSize="18sp" />
-
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">

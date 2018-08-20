@@ -4,52 +4,124 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/logo"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".login.LoginActivity">
+        <activity
+            android:name=".StartActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".RegisterActivity">
-
-        </activity>
-        <activity android:name=".MainActivity">
-
-        </activity>
-        <activity android:name=".lyric.LyricActivity">
-
-        </activity>
-        <activity android:name=".free.FreeActivity">
-
-        </activity>
-        <activity android:name=".music.MusicActivity"></activity>
-        <activity android:name=".search.SearchActivty"></activity>
-        <activity android:name=".status.HeaderActivity"></activity>
+        <activity
+            android:name=".login.LoginActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".RegisterActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".MainActivity"
+            android:launchMode="singleInstance"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".lyric.LyricActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".free.FreeActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".music.MusicActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".search.SearchActivty"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".status.HeaderActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
         <activity
             android:name=".status.XinlvActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:theme="@style/BlackAppTheme"></activity>
         <activity
             android:name=".status.DuanlianActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:theme="@style/BlackAppTheme"></activity>
         <activity
             android:name=".status.ShuimianActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:theme="@style/BlackAppTheme"></activity>
         <activity
             android:name=".status.ChenmaiActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"
             android:theme="@style/BlackAppTheme"></activity>
-        <activity android:name=".mine.DisanfangActivity"></activity>
-        <activity android:name=".mine.ShezhiActivity"></activity>
-        <activity android:name=".mine.ShiyongbangzhuActivity"></activity>
-        <activity android:name=".mine.UserActivity"></activity>
-        <activity android:name=".mine.WodemubiaoActivity"></activity>
-        <activity android:name=".mine.WodeshebeiActivity"></activity>
-        <activity android:name=".mine.YijianfankuiActivity"></activity>
+        <activity
+            android:name=".mine.DisanfangActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".mine.ShezhiActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".mine.ShiyongbangzhuActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".mine.UserActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".mine.WodemubiaoActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".mine.WodeshebeiActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".mine.YijianfankuiActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".voice.ShouyiActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".voice.SettingActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".voice.YinyiActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".voice.InputActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".voice.PhoneActivity"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
+        <activity
+            android:name=".voice.PhoneActivity1"
+            android:launchMode="singleTask"
+            android:screenOrientation="portrait"></activity>
     </application>
 
 </manifest>

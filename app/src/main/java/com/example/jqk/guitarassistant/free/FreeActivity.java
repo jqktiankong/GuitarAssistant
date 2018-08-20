@@ -18,6 +18,7 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.jqk.guitarassistant.R;
 
@@ -202,7 +203,11 @@ public class FreeActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.play:
-//                playSound(tune);
+                if (tune.equals("")) {
+                    Toast.makeText(this, "请按键", Toast.LENGTH_SHORT).show();
+                } else {
+                    playSound(tune);
+                }
                 break;
             case R.id.back:
                 finish();
@@ -231,9 +236,6 @@ public class FreeActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             case "e":
                 uri = Uri.parse(uriStr + R.raw.ee);
-                break;
-            case "":
-                uri = Uri.parse(uriStr + R.raw.empty);
                 break;
         }
 

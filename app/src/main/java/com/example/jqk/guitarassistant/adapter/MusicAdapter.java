@@ -36,7 +36,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.ViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
         viewHolder.initials.setText(songs.get(i).getInitials());
         viewHolder.songName.setText(songs.get(i).getSongName());
         viewHolder.name.setText(songs.get(i).getName());
@@ -52,6 +52,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicAdapter.ViewHolder> 
             public void onClick(View v) {
                 Intent intent = new Intent();
                 intent.setClass(context, LyricActivity.class);
+                intent.putExtra("content", i);
                 context.startActivity(intent);
             }
         });

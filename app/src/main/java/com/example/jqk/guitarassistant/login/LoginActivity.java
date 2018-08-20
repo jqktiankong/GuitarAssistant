@@ -14,7 +14,7 @@ import com.example.jqk.guitarassistant.RegisterActivity;
 
 public class LoginActivity extends AppCompatActivity {
 
-    private Button login, register;
+    private Button login;
     private ImageView back;
 
     @Override
@@ -24,7 +24,6 @@ public class LoginActivity extends AppCompatActivity {
 
         login = findViewById(R.id.login);
         back = findViewById(R.id.back);
-        register = findViewById(R.id.register);
         login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -38,14 +37,6 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 finish();
-            }
-        });
-        register.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent();
-                intent.setClass(LoginActivity.this, RegisterActivity.class);
-                startActivity(intent);
             }
         });
     }

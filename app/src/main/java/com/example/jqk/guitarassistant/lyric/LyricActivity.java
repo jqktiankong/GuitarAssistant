@@ -32,6 +32,8 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
     // 当前音量
     private int currentVolume;
 
+    private int content = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -46,8 +48,14 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
         right.setOnClickListener(this);
         back.setOnClickListener(this);
         // 获取歌词简谱
-        geci = getResources().getString(R.string.geci1);
-        jianpu = getResources().getString(R.string.jianpu1);
+        content = getIntent().getIntExtra("content", 0);
+
+        if (content > getResources().getStringArray(R.array.geci).length - 1) {
+            content = 0;
+        }
+
+        geci = getResources().getStringArray(R.array.geci)[content];
+        jianpu = getResources().getStringArray(R.array.jianpu)[content];
         // 设置歌词，简谱
         lyricsView.setLyrics(Utils.lyricTransform(geci));
         lyricsView.setTunes(Utils.lyricTransform(jianpu));

@@ -15,6 +15,7 @@ import android.widget.Toast;
 import com.example.jqk.guitarassistant.mine.MineFragment;
 import com.example.jqk.guitarassistant.music.MusicFragment;
 import com.example.jqk.guitarassistant.status.StatusFragment;
+import com.example.jqk.guitarassistant.voice.VoiceFragment;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
