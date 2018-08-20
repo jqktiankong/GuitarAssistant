@@ -14,7 +14,7 @@ import com.example.jqk.guitarassistant.R;
 
 public class ShouyiActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private int type = 1;
+    private int type = 2;
     private RelativeLayout contentView;
     private Button button;
     private ImageView back, setting;
