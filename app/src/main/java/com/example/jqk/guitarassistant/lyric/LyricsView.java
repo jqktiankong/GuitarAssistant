@@ -66,38 +66,38 @@ public class LyricsView extends View {
         lyricPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         lyricPaint.setColor(getResources().getColor(R.color.colorlyric));
         lyricPaint.setStyle(Paint.Style.FILL);
-        lyricPaint.setTextSize(50);
+        lyricPaint.setTextSize(40);
         lyricPaint.setTextAlign(Paint.Align.CENTER);
         // 中线歌词笔触
         lyricSelectPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         lyricSelectPaint.setColor(getResources().getColor(R.color.colorlyricSelect));
         lyricSelectPaint.setStyle(Paint.Style.FILL);
-        lyricSelectPaint.setTextSize(50);
+        lyricSelectPaint.setTextSize(40);
         lyricSelectPaint.setTextAlign(Paint.Align.CENTER);
         // 中线笔触
         centerLinePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         centerLinePaint.setColor(getResources().getColor(R.color.colorCenterLine));
         centerLinePaint.setStyle(Paint.Style.FILL);
-        lyricSelectPaint.setTextSize(50);
+        lyricSelectPaint.setTextSize(40);
         // 曲谱笔触
         turnPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         turnPaint.setColor(getResources().getColor(R.color.colorlyric));
         turnPaint.setStyle(Paint.Style.FILL);
-        turnPaint.setTextSize(50);
+        turnPaint.setTextSize(40);
         turnPaint.setTextAlign(Paint.Align.CENTER);
         // 中线曲谱笔触
         turnSelectPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         turnSelectPaint.setColor(getResources().getColor(R.color.colorScoreSelect));
         turnSelectPaint.setStyle(Paint.Style.FILL);
         turnSelectPaint.setTextAlign(Paint.Align.CENTER);
-        turnSelectPaint.setTextSize(50);
+        turnSelectPaint.setTextSize(40);
 
         // 演奏过笔触
         playedPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         playedPaint.setColor(getResources().getColor(R.color.colorPlayed));
         playedPaint.setStyle(Paint.Style.FILL);
         playedPaint.setTextAlign(Paint.Align.CENTER);
-        playedPaint.setTextSize(50);
+        playedPaint.setTextSize(40);
 
         gestureDetector = new GestureDetector(getContext(), new MyGestureDetector());
 
