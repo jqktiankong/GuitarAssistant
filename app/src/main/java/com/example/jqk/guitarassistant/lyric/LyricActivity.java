@@ -33,6 +33,7 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
     private int currentVolume;
 
     private int content = 0;
+    private int songsSize = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,18 +42,21 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
 
         init();
 
-        title.setText("成都");
         play.setOnClickListener(this);
         left.setOnClickListener(this);
         reset.setOnClickListener(this);
         right.setOnClickListener(this);
         back.setOnClickListener(this);
+
+        songsSize = getResources().getStringArray(R.array.songs).length;
         // 获取歌词简谱
         content = getIntent().getIntExtra("content", 0);
-
+        // 避免数组越界
         if (content > getResources().getStringArray(R.array.geci).length - 1) {
             content = 0;
         }
+
+        title.setText(getResources().getStringArray(R.array.songs)[content]);
 
         geci = getResources().getStringArray(R.array.geci)[content];
         jianpu = getResources().getStringArray(R.array.jianpu)[content];
@@ -85,6 +89,24 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
         mAudioManager.setStreamVolume(AudioManager.STREAM_MUSIC, volume, 0);
     }
 
+    public void left() {
+        content = --content < 0 ? 0 : content;
+        geci = getResources().getStringArray(R.array.geci)[content];
+        jianpu = getResources().getStringArray(R.array.jianpu)[content];
+        lyricsView.resetView(Utils.lyricTransform(geci), Utils.lyricTransform(jianpu));
+
+        title.setText(getResources().getStringArray(R.array.songs)[content]);
+    }
+
+    public void right() {
+        content = ++content > songsSize - 1 ? songsSize - 1 : content;
+        geci = getResources().getStringArray(R.array.geci)[content];
+        jianpu = getResources().getStringArray(R.array.jianpu)[content];
+        lyricsView.resetView(Utils.lyricTransform(geci), Utils.lyricTransform(jianpu));
+
+        title.setText(getResources().getStringArray(R.array.songs)[content]);
+    }
+
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -92,10 +114,10 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
                 lyricsView.play();
                 break;
             case R.id.left:
-
+                left();
                 break;
             case R.id.right:
-
+                right();
                 break;
             case R.id.reset:
                 lyricsView.resetView(Utils.lyricTransform(geci), Utils.lyricTransform(jianpu));

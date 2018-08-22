@@ -14,7 +14,7 @@ import com.example.jqk.guitarassistant.R;
 
 public class ShouyiActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private int type = 1;
+    private int type = 2;
     private RelativeLayout contentView;
     private Button button;
     private ImageView back, setting;
@@ -69,11 +69,13 @@ public class ShouyiActivity extends AppCompatActivity implements View.OnClickLis
         if (t == 1) {
             contentView.setBackgroundResource(R.drawable.icon_shouyi_bg2);
             button.setBackgroundResource(R.drawable.bg_shouyi2);
+            button.setText("停止翻译");
 
             type = 2;
         } else {
             contentView.setBackgroundResource(R.drawable.icon_shouyi_bg1);
             button.setBackgroundResource(R.drawable.bg_shouyi1);
+            button.setText("开始翻译");
 
             type = 1;
         }
