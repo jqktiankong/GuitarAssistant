@@ -59,7 +59,10 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
     private BluetoothDevice bluetoothDevice;
     private BluetoothService bluetoothService;
 
+    private long timeNow, timeLast;
+
     private boolean found = false;
+    private boolean isConnected = false;
 
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
@@ -80,6 +83,8 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
                         case BluetoothAdapter.STATE_OFF:
                             // 蓝牙关闭
                             hideDialog();
+                            Toast.makeText(LyricActivity.this, "蓝牙关闭", Toast.LENGTH_SHORT).show();
+                            finish();
                             break;
                     }
                     break;
@@ -89,7 +94,7 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
                     Log.d("123", "device.getName() = " + bluetoothDevice.getName());
                     Log.d("123", "device.getAddress() = " + bluetoothDevice.getAddress());
 
-                    foundBT(bluetoothDevice, bluetoothAdapter, bluetoothService, handler);
+                    foundBT(bluetoothDevice, bluetoothAdapter, handler);
                     break;
                 case BluetoothAdapter.ACTION_DISCOVERY_FINISHED:
                     Log.d("123", "扫描结束");
@@ -108,7 +113,7 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
                             break;
                         case BluetoothDevice.BOND_BONDED:
                             Log.d("123", "配对成功");
-                            foundBT(bluetoothDevice, bluetoothAdapter, bluetoothService, handler);
+                            foundBT(bluetoothDevice, bluetoothAdapter, handler);
                             break;
                     }
                     break;
@@ -117,6 +122,11 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
                     break;
                 case BluetoothDevice.ACTION_ACL_DISCONNECTED:
                     Log.d("123", "连接断开");
+
+                    if (isConnected) {
+                        Toast.makeText(LyricActivity.this, "连接断开", Toast.LENGTH_SHORT).show();
+                        finish();
+                    }
                     break;
             }
         }
@@ -140,12 +150,17 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
                             break;
                         case BluetoothService.STATE_CONNECTED:
                             setType("设备连接成功");
+                            isConnected = true;
                             hideDialog();
                             break;
                     }
                     break;
                 case Constants.MESSAGE_PLAY:
-                    lyricsView.play();
+                    timeNow = System.currentTimeMillis();
+                    if (timeNow - timeLast > 500) {
+                        timeLast = timeNow;
+                        lyricsView.play();
+                    }
                     break;
                 case Constants.MESSAGE_TOAST:
                     Toast.makeText(LyricActivity.this, msg.getData().getString("toast"), Toast.LENGTH_SHORT).show();
@@ -235,6 +250,9 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
         right = findViewById(R.id.right);
         reset = findViewById(R.id.reset);
         back = findViewById(R.id.back);
+
+        timeNow = System.currentTimeMillis();
+        timeLast = System.currentTimeMillis();
     }
 
     public void setVolume(int volume) {
@@ -260,7 +278,7 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
         title.setText(getResources().getStringArray(R.array.songs)[content]);
     }
 
-    public void foundBT(BluetoothDevice device, BluetoothAdapter adapter, BluetoothService service, Handler h) {
+    public void foundBT(BluetoothDevice device, BluetoothAdapter adapter, Handler h) {
         boolean isBond = false;
         found = false;
         if (device.getAddress().equals("20:18:04:10:06:56")) {
@@ -276,11 +294,11 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
                 device.createBond();
             } else {
                 found = true;
-                if (service == null) {
-                    service = new BluetoothService(LyricActivity.this, h);
+                if (bluetoothService == null) {
+                    bluetoothService = new BluetoothService(LyricActivity.this, h);
                 }
-                if (service != null) {
-                    service.connect(device, 1);
+                if (bluetoothService != null) {
+                    bluetoothService.connect(device, 1);
                 }
             }
         }
@@ -399,9 +417,17 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
 
     @Override
     protected void onDestroy() {
+        Log.d("123", "onDestroy");
         super.onDestroy();
+
+        if (handler != null) {
+            handler.removeCallbacksAndMessages(null);
+        }
+
         if (bluetoothService != null) {
+            Log.d("123", "销毁");
             bluetoothService.stop();
         }
+        unregisterReceiver(mReceiver);
     }
 }

@@ -30,7 +30,7 @@ public class BluetoothService {
     //这里默认为1，因为我们目前只需要和一个传感器连接， 比如：你要连接两个硬件设备，那就设置值为2，这样就会开启两个线程，分别去执行想要操作
     public static final int SENSEOR_NUM = 1;
 
-    private AcceptThread mAcceptThread;// 请求连接的监听进程
+    //    private AcceptThread mAcceptThread;// 请求连接的监听进程
     private ConnectThread mConnectThread;// 连接一个设备的进程
     public ConnectedThread[] mConnectedThread = new ConnectedThread[SENSEOR_NUM];// 已经连接之后的管理进程
 
@@ -175,7 +175,7 @@ public class BluetoothService {
                         switch (sHead) {
                             case 0x51://角速度
                                 fData[3] = ((((short) packBuffer[1]) << 8) | ((short) packBuffer[0] & 0xff)) / 32768.0f * 16;
-                                fData[4] = ((((short) packBuffer[3]) << 8) | ((short) packBuffer[2] & 0xff)) / 32768.0f * 16;
+//                                fData[4] = ((((short) packBuffer[3]) << 8) | ((short) packBuffer[2] & 0xff)) / 32768.0f * 16;
                                 break;
                         }
 //                        Log.d("123", "X轴加速度低位 = " + fData[3]);
@@ -184,16 +184,16 @@ public class BluetoothService {
                     long lTimeNow = System.currentTimeMillis(); // 获取收据转换之后的时间
                     // 如果数据处理后的时间  与 接收到数据的时间 的时间差>80 则发送消息传输数据，
                     // 这个时间需要看你硬件一秒钟发送的包的个数
-                    if (lTimeNow - lLastTime > 0) {
-                        lLastTime = lTimeNow;
-                        if (fData[3] > 1) {
-                            Log.d("123", "拨弦");
-                            Message msg = mHandler.obtainMessage(Constants.MESSAGE_PLAY);
-                            mHandler.sendMessage(msg);
-                        }
+//                    if (lTimeNow - lLastTime > 0) {
+//                        lLastTime = lTimeNow;
+                    if (fData[3] > 1) {
+                        Log.d("123", "拨弦");
+                        Message msg = mHandler.obtainMessage(Constants.MESSAGE_PLAY);
+                        mHandler.sendMessage(msg);
                     }
+//                    }
                 } catch (IOException e) {
-                    connectionLost(this.index);
+
                     e.printStackTrace();
                 }
             }
@@ -202,7 +202,9 @@ public class BluetoothService {
         public void cancel() {
             try {
                 mmSocket.close();
+                mmSocket = null;
             } catch (IOException e) {
+
             }
         }
     }
@@ -221,13 +223,15 @@ public class BluetoothService {
 
     // 连接丢失
     private void connectionLost(int index) {
-        setState(STATE_LISTEN);
-        Message msg = mHandler.obtainMessage(Constants.MESSAGE_TOAST);
-        Bundle bundle = new Bundle();
-        bundle.putString("toast", "设备丢失" + index);
-        bundle.putInt("device_id", index);
-        msg.setData(bundle);
-        mHandler.sendMessage(msg);
+        if (mHandler != null) {
+            setState(STATE_LISTEN);
+            Message msg = mHandler.obtainMessage(Constants.MESSAGE_TOAST);
+            Bundle bundle = new Bundle();
+            bundle.putString("toast", "设备丢失" + index);
+            bundle.putInt("device_id", index);
+            msg.setData(bundle);
+            mHandler.sendMessage(msg);
+        }
     }
 
 
@@ -239,10 +243,10 @@ public class BluetoothService {
             mConnectThread = null;
         }
 
-        if (mAcceptThread == null) {
-            mAcceptThread = new AcceptThread();
-            mAcceptThread.start();
-        }
+//        if (mAcceptThread == null) {
+//            mAcceptThread = new AcceptThread();
+//            mAcceptThread.start();
+//        }
         setState(STATE_LISTEN);
     }
 
@@ -254,10 +258,10 @@ public class BluetoothService {
             mConnectThread = null;
         }
         // Cancel the accept thread because we only want to connect to one device
-        if (mAcceptThread != null) {
-            mAcceptThread.cancel();
-            mAcceptThread = null;
-        }
+//        if (mAcceptThread != null) {
+//            mAcceptThread.cancel();
+//            mAcceptThread = null;
+//        }
 
         // Start the thread to manage the connection and perform transmissions
         mConnectedThread[index - 1] = new ConnectedThread(socket, index);
@@ -270,45 +274,55 @@ public class BluetoothService {
     private synchronized void setState(int state) {
         mState = state;
         // Give the new state to the Handler so the UI Activity can update
-        mHandler.obtainMessage(Constants.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
-    }
-
-    private class AcceptThread extends Thread {
-        // The local server socket
-        private final BluetoothServerSocket mmServerSocket;
-
-        //private int index;
-        public AcceptThread() {
-            BluetoothServerSocket tmp = null;
-            // this.index=index;
-            // Create a new listening server socket
-            try {
-                tmp = mAdapter.listenUsingRfcommWithServiceRecord("BluetoothData", MY_UUID);
-            } catch (IOException e) {
-            }
-            mmServerSocket = tmp;
-        }
-
-        public void run() {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-
-                }
-            }).start();
-
-        }
-
-        public void cancel() {
-
-            try {
-                if (mmServerSocket != null) {
-                    mmServerSocket.close();
-                }
-            } catch (IOException e) {
-            }
+        if (mHandler != null) {
+            mHandler.obtainMessage(Constants.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
         }
     }
+
+//    private class AcceptThread extends Thread {
+//        // The local server socket
+//        private final BluetoothServerSocket mmServerSocket;
+//
+//        //private int index;
+//        public AcceptThread() {
+//            BluetoothServerSocket tmp = null;
+//
+//            // this.index=index;
+//            // Create a new listening server socket
+//            try {
+//                tmp = mAdapter.listenUsingRfcommWithServiceRecord("BluetoothData", MY_UUID);
+//            } catch (IOException e) {
+//            }
+//            mmServerSocket = tmp;
+//        }
+//
+//        public volatile boolean exit = false;
+//
+//        public void run() {
+//            while (!exit) {
+//                new Thread(new Runnable() {
+//                    @Override
+//                    public void run() {
+//
+//                    }
+//                }).start();
+//            }
+//        }
+//
+//        public void cancel() {
+//
+//            try {
+//                if (mmServerSocket != null) {
+//                    mmServerSocket.close();
+//                    exit = true;
+//                    this.join();
+//                }
+//            } catch (IOException e) {
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//        }
+//    }
 
     public synchronized int getState() {
         return mState;
@@ -316,16 +330,23 @@ public class BluetoothService {
 
 
     public synchronized void stop() {
+
+        mHandler.removeCallbacksAndMessages(null);
+
         if (mConnectedThread != null) {
             for (int i = 0; i < mConnectedThread.length; i++) {
-                mConnectedThread[i].cancel();
+                if (mConnectedThread[i] != null) {
+                    mConnectedThread[i].cancel();
+                }
+
             }
             mConnectedThread = null;
         }
-        if (mAcceptThread != null) {
-            mAcceptThread.cancel();
-            mAcceptThread = null;
-        }
+
+//        if (mAcceptThread != null) {
+//            mAcceptThread.cancel();
+//            mAcceptThread = null;
+//        }
         setState(STATE_NONE);
     }
 }
