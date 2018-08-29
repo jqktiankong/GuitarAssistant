@@ -32,9 +32,10 @@
 
 
         <LinearLayout
-            android:layout_width="230dp"
+            android:layout_width="match_parent"
             android:layout_height="60dp"
             android:layout_marginLeft="10dp"
+            android:layout_marginRight="15dp"
             android:layout_toEndOf="@+id/initialsView"
             android:orientation="vertical">
 
@@ -44,7 +45,7 @@
                 android:layout_height="0dp"
                 android:layout_weight="1.5"
                 android:ellipsize="end"
-                android:text="歌名"
+                android:maxLines="1"
                 android:textColor="@color/colorlyricsViewBackground"
                 android:textSize="20sp" />
 

@@ -1,7 +1,17 @@
 package com.example.jqk.guitarassistant.lyric;
 
+import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
+import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.AudioManager;
+import android.os.Handler;
+import android.os.Message;
+import android.os.PersistableBundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,9 +21,18 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.jqk.guitarassistant.R;
+import com.example.jqk.guitarassistant.bluetooth.BluetoothDialog;
+import com.example.jqk.guitarassistant.bluetooth.BluetoothService;
+import com.example.jqk.guitarassistant.util.Constants;
 import com.example.jqk.guitarassistant.util.Utils;
+
+import java.util.List;
+import java.util.Set;
+
+import static com.example.jqk.guitarassistant.util.Constants.REQUEST_ENABLE_BT;
 
 public class LyricActivity extends AppCompatActivity implements View.OnClickListener, SeekBar.OnSeekBarChangeListener {
 
@@ -34,6 +53,107 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
 
     private int content = 0;
     private int songsSize = 0;
+    private FragmentTransaction ft;
+    private BluetoothDialog bluetoothDialog;
+    private BluetoothAdapter bluetoothAdapter;
+    private BluetoothDevice bluetoothDevice;
+    private BluetoothService bluetoothService;
+
+    private boolean found = false;
+
+    private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
+        public void onReceive(Context context, Intent intent) {
+            String action = intent.getAction();
+            // When discovery finds a device
+            switch (action) {
+                case BluetoothAdapter.ACTION_STATE_CHANGED:
+                    int blueState = intent.getIntExtra(BluetoothAdapter.EXTRA_STATE, 0);
+                    switch (blueState) {
+                        case BluetoothAdapter.STATE_TURNING_ON:
+                            break;
+                        case BluetoothAdapter.STATE_ON:
+                            // 蓝牙开启
+                            showDialog();
+                            break;
+                        case BluetoothAdapter.STATE_TURNING_OFF:
+                            break;
+                        case BluetoothAdapter.STATE_OFF:
+                            // 蓝牙关闭
+                            hideDialog();
+                            break;
+                    }
+                    break;
+                case BluetoothDevice.ACTION_FOUND:
+                    Log.d("123", "发现设备");
+                    bluetoothDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                    Log.d("123", "device.getName() = " + bluetoothDevice.getName());
+                    Log.d("123", "device.getAddress() = " + bluetoothDevice.getAddress());
+
+                    foundBT(bluetoothDevice, bluetoothAdapter, bluetoothService, handler);
+                    break;
+                case BluetoothAdapter.ACTION_DISCOVERY_FINISHED:
+                    Log.d("123", "扫描结束");
+                    if (!found) {
+                        bluetoothAdapter.startDiscovery();
+                    }
+                    break;
+                case BluetoothDevice.ACTION_BOND_STATE_CHANGED:
+                    int state = intent.getIntExtra(BluetoothDevice.EXTRA_BOND_STATE, -1);
+                    switch (state) {
+                        case BluetoothDevice.BOND_NONE:
+                            Log.d("123", "删除配对");
+                            break;
+                        case BluetoothDevice.BOND_BONDING:
+                            Log.d("123", "正在配对");
+                            break;
+                        case BluetoothDevice.BOND_BONDED:
+                            Log.d("123", "配对成功");
+                            foundBT(bluetoothDevice, bluetoothAdapter, bluetoothService, handler);
+                            break;
+                    }
+                    break;
+                case BluetoothDevice.ACTION_ACL_CONNECTED:
+                    Log.d("123", "连接成功");
+                    break;
+                case BluetoothDevice.ACTION_ACL_DISCONNECTED:
+                    Log.d("123", "连接断开");
+                    break;
+            }
+        }
+    };
+
+    private Handler handler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what) {
+                case Constants.MESSAGE_STATE_CHANGE:
+                    switch (msg.arg1) {
+                        case BluetoothService.STATE_NONE:
+
+                            break;
+                        case BluetoothService.STATE_LISTEN:
+
+                            break;
+                        case BluetoothService.STATE_CONNECTING:
+                            setType("正在连接设备");
+                            break;
+                        case BluetoothService.STATE_CONNECTED:
+                            setType("设备连接成功");
+                            hideDialog();
+                            break;
+                    }
+                    break;
+                case Constants.MESSAGE_PLAY:
+                    lyricsView.play();
+                    break;
+                case Constants.MESSAGE_TOAST:
+                    Toast.makeText(LyricActivity.this, msg.getData().getString("toast"), Toast.LENGTH_SHORT).show();
+                    finish();
+                    break;
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +191,39 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
         seekBar.setMax(maxVolume);
         seekBar.setProgress(currentVolume);
         seekBar.setOnSeekBarChangeListener(this);
+
+        bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (bluetoothAdapter == null) {
+            // Device does not support Bluetooth
+            Toast.makeText(this, "设备不支持蓝牙", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+
+        if (!bluetoothAdapter.isEnabled()) {
+            Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            startActivityForResult(enableBtIntent, REQUEST_ENABLE_BT);
+        } else {
+            showDialog();
+        }
+
+        IntentFilter filter = new IntentFilter();
+        // 发现设备
+        filter.addAction(BluetoothDevice.ACTION_FOUND);
+        // 扫描结束
+        filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
+        // 配对状态变化
+        filter.addAction(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
+        // 连接成功
+        filter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
+        // 连接取消
+        filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
+        // 蓝牙开启状态变化
+        filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
+        registerReceiver(mReceiver, filter);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
     }
 
     public void init() {
@@ -105,6 +258,67 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
         lyricsView.resetView(Utils.lyricTransform(geci), Utils.lyricTransform(jianpu));
 
         title.setText(getResources().getStringArray(R.array.songs)[content]);
+    }
+
+    public void foundBT(BluetoothDevice device, BluetoothAdapter adapter, BluetoothService service, Handler h) {
+        boolean isBond = false;
+        found = false;
+        if (device.getAddress().equals("20:18:04:10:06:56")) {
+            adapter.cancelDiscovery();
+            Set<BluetoothDevice> devices = adapter.getBondedDevices();
+            Log.d("123", "已配对的设备 = " + devices.toString());
+            for (BluetoothDevice bluetoothDevice : devices) {
+                if (bluetoothDevice.getAddress().equals("20:18:04:10:06:56")) {
+                    isBond = true;
+                }
+            }
+            if (!isBond) {
+                device.createBond();
+            } else {
+                found = true;
+                if (service == null) {
+                    service = new BluetoothService(LyricActivity.this, h);
+                }
+                if (service != null) {
+                    service.connect(device, 1);
+                }
+            }
+        }
+    }
+
+    public void setType(String str) {
+        if (bluetoothDialog != null) {
+            bluetoothDialog.setShowText(str);
+        }
+    }
+
+    public void showDialog() {
+        if (bluetoothDialog == null) {
+            bluetoothDialog = new BluetoothDialog();
+            bluetoothDialog.setOnBluetoothClickListener(new BluetoothDialog.OnBluetoothClickListener() {
+                @Override
+                public void start() {
+                    bluetoothAdapter.startDiscovery();
+                }
+            });
+            ft = getSupportFragmentManager().beginTransaction();
+            ft.add(bluetoothDialog, "ProgressDialog");
+            if (!bluetoothDialog.isAdded() && !bluetoothDialog.isVisible() && !bluetoothDialog.isRemoving()) {
+                ft.commitAllowingStateLoss();
+            }
+        } else {
+            if (!bluetoothDialog.isAdded() && !bluetoothDialog.isVisible() && !bluetoothDialog.isRemoving()) {
+                ft = getSupportFragmentManager().beginTransaction();
+                ft.add(bluetoothDialog, "ProgressDialog");
+                ft.commitAllowingStateLoss();
+            }
+        }
+    }
+
+    public void hideDialog() {
+        if (bluetoothDialog != null) {
+            bluetoothDialog.dismissAllowingStateLoss();
+        }
     }
 
     @Override
@@ -164,5 +378,30 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
                 return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == REQUEST_ENABLE_BT) {
+            if (resultCode == RESULT_OK) {
+                // 确定
+            }
+
+            if (resultCode == RESULT_CANCELED) {
+                // 取消
+                Toast.makeText(this, "拒绝开启蓝牙", Toast.LENGTH_SHORT).show();
+                finish();
+            }
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (bluetoothService != null) {
+            bluetoothService.stop();
+        }
     }
 }
