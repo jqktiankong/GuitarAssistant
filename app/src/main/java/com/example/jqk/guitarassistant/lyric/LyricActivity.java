@@ -145,9 +145,6 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onStop() {
         super.onStop();
-        if (bluetoothService != null) {
-            bluetoothService.stop();
-        }
         EventBus.getDefault().unregister(this);
     }
 
@@ -288,11 +285,18 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
         title.setText(getResources().getStringArray(R.array.songs)[content]);
     }
 
-    public void foundBT(BluetoothDevice device) {
-        bluetoothAdapter.cancelDiscovery();
+    public void foundBT(final BluetoothDevice device) {
         if (device.getAddress().equals("20:18:04:10:06:56")) {
+            bluetoothAdapter.cancelDiscovery();
             if (device.getBondState() == BluetoothDevice.BOND_NONE) {
-                device.createBond();
+                new Thread() {
+                    @Override
+                    public void run() {
+                        super.run();
+                        device.createBond();
+                    }
+                }.start();
+
             } else if (device.getBondState() == BluetoothDevice.BOND_BONDED) {
                 isfonded = true;
                 if (bluetoothService == null) {
@@ -423,5 +427,11 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
         Log.d("123", "onDestroy");
         super.onDestroy();
         unregisterReceiver(mReceiver);
+        if (bluetoothAdapter != null) {
+            bluetoothAdapter.cancelDiscovery();
+        }
+        if (bluetoothService != null) {
+            bluetoothService.stop();
+        }
     }
 }

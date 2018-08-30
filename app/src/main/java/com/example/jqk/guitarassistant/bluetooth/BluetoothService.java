@@ -78,6 +78,7 @@ public class BluetoothService {
             try {
                 mmSocket.connect();// This is a blocking call and will only return on a successful connection or an exception
             } catch (IOException e) {
+//                connectionFailed();
                 return;
             }
 
@@ -168,7 +169,6 @@ public class BluetoothService {
 //                    if (lTimeNow - lLastTime > 0) {
 //                        lLastTime = lTimeNow;
                     if (fData[3] > 1) {
-                        Log.d("123", "拨弦");
                         EventBus.getDefault().post(new MessageEvent(Constants.MESSAGE_PLAY, "", -1));
                     }
 //                    }
@@ -193,7 +193,7 @@ public class BluetoothService {
     private void connectionFailed() {
         setState(STATE_LISTEN);
         // Send a failure message back to the Activity
-        EventBus.getDefault().post(new MessageEvent(Constants.MESSAGE_TOAST, "未能连接设备", -1));
+        EventBus.getDefault().post(new MessageEvent(Constants.MESSAGE_TOAST, "连接失败", -1));
     }
 
     // 连接丢失
