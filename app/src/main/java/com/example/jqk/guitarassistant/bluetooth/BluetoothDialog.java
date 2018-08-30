@@ -4,6 +4,7 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,6 +16,9 @@ public class BluetoothDialog extends DialogFragment {
 
     private Button start;
     private RippleView rippleView;
+
+    private boolean starting = false;
+
     private OnBluetoothClickListener onBluetoothClickListener;
     public interface OnBluetoothClickListener {
         void start();
@@ -44,6 +48,7 @@ public class BluetoothDialog extends DialogFragment {
     }
 
     public void startRipple() {
+        starting = true;
         if (!rippleView.isStarting()) {
             rippleView.start();
             setShowText("正在搜索设备");
@@ -52,5 +57,14 @@ public class BluetoothDialog extends DialogFragment {
 
     public void setShowText(String str) {
         start.setText(str);
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        if (starting) {
+            rippleView.stop();
+            rippleView.start();
+        }
     }
 }

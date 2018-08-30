@@ -26,8 +26,13 @@ import android.widget.Toast;
 import com.example.jqk.guitarassistant.R;
 import com.example.jqk.guitarassistant.bluetooth.BluetoothDialog;
 import com.example.jqk.guitarassistant.bluetooth.BluetoothService;
+import com.example.jqk.guitarassistant.event.MessageEvent;
 import com.example.jqk.guitarassistant.util.Constants;
 import com.example.jqk.guitarassistant.util.Utils;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 import java.util.Set;
@@ -61,12 +66,13 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
 
     private long timeNow, timeLast;
 
-    private boolean found = false;
     private boolean isConnected = false;
+    private boolean isfonded = false;
 
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
+            int state;
             // When discovery finds a device
             switch (action) {
                 case BluetoothAdapter.ACTION_STATE_CHANGED:
@@ -84,91 +90,103 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
                             // 蓝牙关闭
                             hideDialog();
                             Toast.makeText(LyricActivity.this, "蓝牙关闭", Toast.LENGTH_SHORT).show();
+                            if (bluetoothService != null) {
+                                bluetoothService.stop();
+                            }
                             finish();
                             break;
                     }
                     break;
                 case BluetoothDevice.ACTION_FOUND:
-                    Log.d("123", "发现设备");
                     bluetoothDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
-                    Log.d("123", "device.getName() = " + bluetoothDevice.getName());
                     Log.d("123", "device.getAddress() = " + bluetoothDevice.getAddress());
 
-                    foundBT(bluetoothDevice, bluetoothAdapter, handler);
+                    foundBT(bluetoothDevice);
                     break;
                 case BluetoothAdapter.ACTION_DISCOVERY_FINISHED:
-                    Log.d("123", "扫描结束");
-                    if (!found) {
+                    if (isfonded && !isConnected) {
                         bluetoothAdapter.startDiscovery();
                     }
                     break;
                 case BluetoothDevice.ACTION_BOND_STATE_CHANGED:
-                    int state = intent.getIntExtra(BluetoothDevice.EXTRA_BOND_STATE, -1);
+                    bluetoothDevice = intent.getParcelableExtra(BluetoothDevice.EXTRA_DEVICE);
+                    state = intent.getIntExtra(BluetoothDevice.EXTRA_BOND_STATE, -1);
                     switch (state) {
                         case BluetoothDevice.BOND_NONE:
                             Log.d("123", "删除配对");
+                            Toast.makeText(LyricActivity.this, "配对失败", Toast.LENGTH_SHORT).show();
+                            finish();
                             break;
                         case BluetoothDevice.BOND_BONDING:
                             Log.d("123", "正在配对");
+                            setType("正在配对");
                             break;
                         case BluetoothDevice.BOND_BONDED:
                             Log.d("123", "配对成功");
-                            foundBT(bluetoothDevice, bluetoothAdapter, handler);
+                            Toast.makeText(LyricActivity.this, "配对成功", Toast.LENGTH_SHORT).show();
+                            foundBT(bluetoothDevice);
                             break;
-                    }
-                    break;
-                case BluetoothDevice.ACTION_ACL_CONNECTED:
-                    Log.d("123", "连接成功");
-                    break;
-                case BluetoothDevice.ACTION_ACL_DISCONNECTED:
-                    Log.d("123", "连接断开");
-
-                    if (isConnected) {
-                        Toast.makeText(LyricActivity.this, "连接断开", Toast.LENGTH_SHORT).show();
-                        finish();
+                        default:
+                            Toast.makeText(LyricActivity.this, "未知原因", Toast.LENGTH_SHORT).show();
+                            finish();
+                            break;
                     }
                     break;
             }
         }
     };
 
-    private Handler handler = new Handler() {
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            switch (msg.what) {
-                case Constants.MESSAGE_STATE_CHANGE:
-                    switch (msg.arg1) {
-                        case BluetoothService.STATE_NONE:
+    @Override
+    public void onStart() {
+        super.onStart();
+        EventBus.getDefault().register(this);
+    }
 
-                            break;
-                        case BluetoothService.STATE_LISTEN:
-
-                            break;
-                        case BluetoothService.STATE_CONNECTING:
-                            setType("正在连接设备");
-                            break;
-                        case BluetoothService.STATE_CONNECTED:
-                            setType("设备连接成功");
-                            isConnected = true;
-                            hideDialog();
-                            break;
-                    }
-                    break;
-                case Constants.MESSAGE_PLAY:
-                    timeNow = System.currentTimeMillis();
-                    if (timeNow - timeLast > 500) {
-                        timeLast = timeNow;
-                        lyricsView.play();
-                    }
-                    break;
-                case Constants.MESSAGE_TOAST:
-                    Toast.makeText(LyricActivity.this, msg.getData().getString("toast"), Toast.LENGTH_SHORT).show();
-                    finish();
-                    break;
-            }
+    @Override
+    public void onStop() {
+        super.onStop();
+        if (bluetoothService != null) {
+            bluetoothService.stop();
         }
-    };
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onMessageEvent(MessageEvent event) {
+        switch (event.getMark()) {
+            case Constants.MESSAGE_STATE_CHANGE:
+                switch (event.getState()) {
+                    case BluetoothService.STATE_NONE:
+
+                        break;
+                    case BluetoothService.STATE_LISTEN:
+
+                        break;
+                    case BluetoothService.STATE_CONNECTING:
+                        setType("正在连接设备");
+                        break;
+                    case BluetoothService.STATE_CONNECTED:
+                        bluetoothAdapter.cancelDiscovery();
+                        setType("设备连接成功");
+                        Toast.makeText(LyricActivity.this, "连接成功", Toast.LENGTH_SHORT).show();
+                        isConnected = true;
+                        hideDialog();
+                        break;
+                }
+                break;
+            case Constants.MESSAGE_PLAY:
+                timeNow = System.currentTimeMillis();
+                if (timeNow - timeLast > 500) {
+                    timeLast = timeNow;
+                    lyricsView.play();
+                }
+                break;
+            case Constants.MESSAGE_TOAST:
+                Toast.makeText(LyricActivity.this, event.getMessage(), Toast.LENGTH_SHORT).show();
+                finish();
+                break;
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -228,17 +246,9 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
         filter.addAction(BluetoothAdapter.ACTION_DISCOVERY_FINISHED);
         // 配对状态变化
         filter.addAction(BluetoothDevice.ACTION_BOND_STATE_CHANGED);
-        // 连接成功
-        filter.addAction(BluetoothDevice.ACTION_ACL_CONNECTED);
-        // 连接取消
-        filter.addAction(BluetoothDevice.ACTION_ACL_DISCONNECTED);
         // 蓝牙开启状态变化
         filter.addAction(BluetoothAdapter.ACTION_STATE_CHANGED);
         registerReceiver(mReceiver, filter);
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
     }
 
     public void init() {
@@ -278,28 +288,21 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
         title.setText(getResources().getStringArray(R.array.songs)[content]);
     }
 
-    public void foundBT(BluetoothDevice device, BluetoothAdapter adapter, Handler h) {
-        boolean isBond = false;
-        found = false;
+    public void foundBT(BluetoothDevice device) {
+        bluetoothAdapter.cancelDiscovery();
         if (device.getAddress().equals("20:18:04:10:06:56")) {
-            adapter.cancelDiscovery();
-            Set<BluetoothDevice> devices = adapter.getBondedDevices();
-            Log.d("123", "已配对的设备 = " + devices.toString());
-            for (BluetoothDevice bluetoothDevice : devices) {
-                if (bluetoothDevice.getAddress().equals("20:18:04:10:06:56")) {
-                    isBond = true;
-                }
-            }
-            if (!isBond) {
+            if (device.getBondState() == BluetoothDevice.BOND_NONE) {
                 device.createBond();
-            } else {
-                found = true;
+            } else if (device.getBondState() == BluetoothDevice.BOND_BONDED) {
+                isfonded = true;
                 if (bluetoothService == null) {
-                    bluetoothService = new BluetoothService(LyricActivity.this, h);
+                    bluetoothService = new BluetoothService(LyricActivity.this);
                 }
                 if (bluetoothService != null) {
-                    bluetoothService.connect(device, 1);
+                    bluetoothService.connect(device);
                 }
+            } else if (device.getBondState() == BluetoothDevice.BOND_BONDING) {
+                setType("正在配对");
             }
         }
     }
@@ -419,15 +422,6 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
     protected void onDestroy() {
         Log.d("123", "onDestroy");
         super.onDestroy();
-
-        if (handler != null) {
-            handler.removeCallbacksAndMessages(null);
-        }
-
-        if (bluetoothService != null) {
-            Log.d("123", "销毁");
-            bluetoothService.stop();
-        }
         unregisterReceiver(mReceiver);
     }
 }

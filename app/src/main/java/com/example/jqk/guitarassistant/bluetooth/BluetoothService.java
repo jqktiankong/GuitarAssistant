@@ -10,7 +10,10 @@ import android.os.Handler;
 import android.os.Message;
 import android.util.Log;
 
+import com.example.jqk.guitarassistant.event.MessageEvent;
 import com.example.jqk.guitarassistant.util.Constants;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -24,15 +27,9 @@ public class BluetoothService {
     private Context context;
     //蓝牙适配器
     private BluetoothAdapter mAdapter;
-    private Handler mHandler;
 
-    //当前传感器设备的个数，即要开启的线程个数，用于设置线程数组的大小
-    //这里默认为1，因为我们目前只需要和一个传感器连接， 比如：你要连接两个硬件设备，那就设置值为2，这样就会开启两个线程，分别去执行想要操作
-    public static final int SENSEOR_NUM = 1;
-
-    //    private AcceptThread mAcceptThread;// 请求连接的监听进程
     private ConnectThread mConnectThread;// 连接一个设备的进程
-    public ConnectedThread[] mConnectedThread = new ConnectedThread[SENSEOR_NUM];// 已经连接之后的管理进程
+    private ConnectedThread mConnectedThread;
 
     private int mState;// 当前状态
 
@@ -42,23 +39,20 @@ public class BluetoothService {
     public static final int STATE_CONNECTING = 2;  //正在连接
     public static final int STATE_CONNECTED = 3;   //已经连接
 
-    public BluetoothService(Context context, Handler mHandler) {
+    public BluetoothService(Context context) {
         this.context = context;
-        this.mHandler = mHandler;
         mAdapter = BluetoothAdapter.getDefaultAdapter();//获取蓝牙适配器
         mState = STATE_NONE; //当前连接状态：未连接
     }
 
-    // 参数 index 是 硬件设备的id ，随便设的，目的在于当 同时连接多个硬件设备的时候，根据此id进行区分
-    public synchronized void connect(BluetoothDevice device, int index) {
+    public synchronized void connect(BluetoothDevice device) {
 
         //连接一个蓝牙时，将该设备 的蓝牙连接线程关闭，如果有的话
-        //demo  就只有一个硬件设备，默认该设备id 取值index=1;
-        if (mConnectedThread[index - 1] != null) {
-            mConnectedThread[index - 1].cancel();
-            mConnectedThread[index - 1] = null;
+        if (mConnectThread != null) {
+            mConnectThread.cancel();
+            mConnectThread = null;
         }
-        mConnectThread = new ConnectThread(device, index);
+        mConnectThread = new ConnectThread(device);
         mConnectThread.start();
         setState(STATE_CONNECTING);
     }
@@ -66,11 +60,9 @@ public class BluetoothService {
     private class ConnectThread extends Thread {
         private final BluetoothSocket mmSocket;
         private final BluetoothDevice mmDevice;
-        private int index;
 
-        public ConnectThread(BluetoothDevice device, int index) {
+        public ConnectThread(BluetoothDevice device) {
             mmDevice = device;
-            this.index = index;
             BluetoothSocket tmp = null;
             try {
                 tmp = device.createRfcommSocketToServiceRecord(MY_UUID);// Get a BluetoothSocket for a connection with the given BluetoothDevice
@@ -82,26 +74,17 @@ public class BluetoothService {
         public void run() {
 
             setName("ConnectThread");
-            //当连接成功，取消蓝牙适配器搜索蓝牙设备的操作，因为搜索操作非常耗时
-            mAdapter.cancelDiscovery();// Always cancel discovery because it will slow down a connection
 
             try {
                 mmSocket.connect();// This is a blocking call and will only return on a successful connection or an exception
             } catch (IOException e) {
-                connectionFailed(this.index);
-                try {
-                    mmSocket.close();
-                } catch (IOException e2) {
-                }
-
-                BluetoothService.this.start();// 引用来说明要调用的是外部类的方法 run
                 return;
             }
 
             synchronized (BluetoothService.this) {// Reset the ConnectThread because we're done
                 mConnectThread = null;
             }
-            connected(mmSocket, mmDevice, index);// Start the connected thread
+            connected(mmSocket, mmDevice);// Start the connected thread
         }
 
         public void cancel() {
@@ -116,17 +99,15 @@ public class BluetoothService {
         private BluetoothSocket mmSocket;
         private InputStream mmInStream;
         private OutputStream mmOutStream;
-        private int index;
         private Queue<Byte> queueBuffer = new LinkedList<Byte>();
         private byte[] packBuffer = new byte[11];
 
 
         //构造方法
-        public ConnectedThread(BluetoothSocket socket, int index) {
+        public ConnectedThread(BluetoothSocket socket) {
             mmSocket = socket;
             InputStream tmpIn = null;
             OutputStream tmpOut = null;
-            this.index = index;
             // Get the BluetoothSocket input and output streams
             try {
                 tmpIn = socket.getInputStream();
@@ -188,13 +169,12 @@ public class BluetoothService {
 //                        lLastTime = lTimeNow;
                     if (fData[3] > 1) {
                         Log.d("123", "拨弦");
-                        Message msg = mHandler.obtainMessage(Constants.MESSAGE_PLAY);
-                        mHandler.sendMessage(msg);
+                        EventBus.getDefault().post(new MessageEvent(Constants.MESSAGE_PLAY, "", -1));
                     }
 //                    }
                 } catch (IOException e) {
-
-                    e.printStackTrace();
+                    connectionLost();
+                    return;
                 }
             }
         }
@@ -210,28 +190,15 @@ public class BluetoothService {
     }
 
     //连接失败
-    private void connectionFailed(int index) {
+    private void connectionFailed() {
         setState(STATE_LISTEN);
         // Send a failure message back to the Activity
-        Message msg = mHandler.obtainMessage(Constants.MESSAGE_TOAST);
-        Bundle bundle = new Bundle();
-        bundle.putString("toast", "未能连接设备" + index);
-        bundle.putInt("device_id", index);
-        msg.setData(bundle);
-        mHandler.sendMessage(msg);
+        EventBus.getDefault().post(new MessageEvent(Constants.MESSAGE_TOAST, "未能连接设备", -1));
     }
 
     // 连接丢失
-    private void connectionLost(int index) {
-        if (mHandler != null) {
-            setState(STATE_LISTEN);
-            Message msg = mHandler.obtainMessage(Constants.MESSAGE_TOAST);
-            Bundle bundle = new Bundle();
-            bundle.putString("toast", "设备丢失" + index);
-            bundle.putInt("device_id", index);
-            msg.setData(bundle);
-            mHandler.sendMessage(msg);
-        }
+    private void connectionLost() {
+        EventBus.getDefault().post(new MessageEvent(Constants.MESSAGE_TOAST, "设备丢失", -1));
     }
 
 
@@ -243,30 +210,19 @@ public class BluetoothService {
             mConnectThread = null;
         }
 
-//        if (mAcceptThread == null) {
-//            mAcceptThread = new AcceptThread();
-//            mAcceptThread.start();
-//        }
         setState(STATE_LISTEN);
     }
 
-    public synchronized void connected(BluetoothSocket socket, BluetoothDevice device, int index) {
-        Log.d("MAGIKARE", "连接到线程" + index);
+    public synchronized void connected(BluetoothSocket socket, BluetoothDevice device) {
         // Cancel the thread that completed the connection
         if (mConnectThread != null) {
             mConnectThread.cancel();
             mConnectThread = null;
         }
-        // Cancel the accept thread because we only want to connect to one device
-//        if (mAcceptThread != null) {
-//            mAcceptThread.cancel();
-//            mAcceptThread = null;
-//        }
-
         // Start the thread to manage the connection and perform transmissions
-        mConnectedThread[index - 1] = new ConnectedThread(socket, index);
+        mConnectedThread = new ConnectedThread(socket);
 
-        mConnectedThread[index - 1].start();
+        mConnectedThread.start();
 
         setState(STATE_CONNECTED);
     }
@@ -274,79 +230,16 @@ public class BluetoothService {
     private synchronized void setState(int state) {
         mState = state;
         // Give the new state to the Handler so the UI Activity can update
-        if (mHandler != null) {
-            mHandler.obtainMessage(Constants.MESSAGE_STATE_CHANGE, state, -1).sendToTarget();
-        }
+        EventBus.getDefault().post(new MessageEvent(Constants.MESSAGE_STATE_CHANGE, "", state));
     }
-
-//    private class AcceptThread extends Thread {
-//        // The local server socket
-//        private final BluetoothServerSocket mmServerSocket;
-//
-//        //private int index;
-//        public AcceptThread() {
-//            BluetoothServerSocket tmp = null;
-//
-//            // this.index=index;
-//            // Create a new listening server socket
-//            try {
-//                tmp = mAdapter.listenUsingRfcommWithServiceRecord("BluetoothData", MY_UUID);
-//            } catch (IOException e) {
-//            }
-//            mmServerSocket = tmp;
-//        }
-//
-//        public volatile boolean exit = false;
-//
-//        public void run() {
-//            while (!exit) {
-//                new Thread(new Runnable() {
-//                    @Override
-//                    public void run() {
-//
-//                    }
-//                }).start();
-//            }
-//        }
-//
-//        public void cancel() {
-//
-//            try {
-//                if (mmServerSocket != null) {
-//                    mmServerSocket.close();
-//                    exit = true;
-//                    this.join();
-//                }
-//            } catch (IOException e) {
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//    }
-
-    public synchronized int getState() {
-        return mState;
-    }
-
 
     public synchronized void stop() {
 
-        mHandler.removeCallbacksAndMessages(null);
-
         if (mConnectedThread != null) {
-            for (int i = 0; i < mConnectedThread.length; i++) {
-                if (mConnectedThread[i] != null) {
-                    mConnectedThread[i].cancel();
-                }
-
-            }
+            mConnectedThread.cancel();
             mConnectedThread = null;
         }
 
-//        if (mAcceptThread != null) {
-//            mAcceptThread.cancel();
-//            mAcceptThread = null;
-//        }
         setState(STATE_NONE);
     }
 }

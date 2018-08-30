@@ -134,6 +134,7 @@
             android:name=".voice.PhoneActivity1"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
+
     </application>
 
 </manifest>
