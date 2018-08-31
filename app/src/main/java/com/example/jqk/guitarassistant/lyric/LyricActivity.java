@@ -43,7 +43,6 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
 
     private TextView title;
     private LyricsView lyricsView;
-    private Button play;
     private SeekBar seekBar;
     private ImageView left, right, reset, back;
 
@@ -196,7 +195,6 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
 
         init();
 
-        play.setOnClickListener(this);
         left.setOnClickListener(this);
         reset.setOnClickListener(this);
         right.setOnClickListener(this);
@@ -256,7 +254,6 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
     public void init() {
         lyricsView = findViewById(R.id.lyricsView);
         title = findViewById(R.id.title);
-        play = findViewById(R.id.play);
         seekBar = findViewById(R.id.seekBar);
         left = findViewById(R.id.left);
         right = findViewById(R.id.right);
@@ -355,9 +352,6 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.play:
-                lyricsView.play();
-                break;
             case R.id.left:
                 left();
                 break;

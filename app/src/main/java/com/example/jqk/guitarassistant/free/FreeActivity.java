@@ -49,7 +49,6 @@ public class FreeActivity extends AppCompatActivity implements View.OnClickListe
     private LinearLayout imgParentView;
     private Button imgd, imga, imgf, imgg, imgc, imge;
     private TextView title;
-    private Button play;
     private SeekBar seekBar;
     // 调节音量
     private AudioManager mAudioManager;
@@ -231,7 +230,6 @@ public class FreeActivity extends AppCompatActivity implements View.OnClickListe
         guitarImg = findViewById(R.id.guitarImg);
         guitarParentView = findViewById(R.id.guitarParentView);
         imgParentView = findViewById(R.id.imgParentView);
-        play = findViewById(R.id.play);
         seekBar = findViewById(R.id.seekBar);
         back = findViewById(R.id.back);
 
@@ -251,7 +249,6 @@ public class FreeActivity extends AppCompatActivity implements View.OnClickListe
         imgc.setOnTouchListener(this);
         imge.setOnTouchListener(this);
 
-        play.setOnClickListener(this);
         back.setOnClickListener(this);
 
         mAudioManager = (AudioManager) getSystemService(Context.AUDIO_SERVICE);
@@ -468,9 +465,6 @@ public class FreeActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-            case R.id.play:
-                play();
-                break;
             case R.id.back:
                 finish();
                 break;
