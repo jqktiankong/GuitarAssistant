@@ -58,6 +58,7 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
 
     private int content = 0;
     private int songsSize = 0;
+    // 蓝牙
     private FragmentTransaction ft;
     private BluetoothDialog bluetoothDialog;
     private BluetoothAdapter bluetoothAdapter;
@@ -69,6 +70,7 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
     private boolean isConnected = false;
     private boolean isfonded = false;
 
+    // 蓝牙接受广播
     private final BroadcastReceiver mReceiver = new BroadcastReceiver() {
         public void onReceive(Context context, Intent intent) {
             String action = intent.getAction();
@@ -136,6 +138,7 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
         }
     };
 
+    // 注册注销eventBus
     @Override
     public void onStart() {
         super.onStart();
@@ -148,6 +151,7 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
         EventBus.getDefault().unregister(this);
     }
 
+    // 接收eventBus消息
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onMessageEvent(MessageEvent event) {
         switch (event.getMark()) {
@@ -222,6 +226,7 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
         seekBar.setProgress(currentVolume);
         seekBar.setOnSeekBarChangeListener(this);
 
+        // 蓝牙设置
         bluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (bluetoothAdapter == null) {
             // Device does not support Bluetooth
@@ -258,6 +263,7 @@ public class LyricActivity extends AppCompatActivity implements View.OnClickList
         reset = findViewById(R.id.reset);
         back = findViewById(R.id.back);
 
+        // 初始化时间
         timeNow = System.currentTimeMillis();
         timeLast = System.currentTimeMillis();
     }
