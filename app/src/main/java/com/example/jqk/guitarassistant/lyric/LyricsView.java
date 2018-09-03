@@ -183,11 +183,11 @@ public class LyricsView extends View {
                 line = 0;
             }
 
-            if (i % 13 == 0 && i != 0) {
+            if (i % horizontalCount == 0 && i != 0) {
                 line++;
             }
 
-            x = i % 13 * viewWidth / 13 + viewWidth / 13 / 2;
+            x = i % horizontalCount * viewWidth / horizontalCount + viewWidth / horizontalCount / 2;
             lyrics.get(i).setBaseline(line * itemHeight + itemHeight / 2 - (lyricFm.bottom - lyricFm.top) / 2 - lyricFm.top);
             lyrics.get(i).setX(x);
             lyrics.get(i).setLineNum(line);
@@ -207,11 +207,11 @@ public class LyricsView extends View {
                 line = 0;
             }
 
-            if (i % 13 == 0 && i != 0) {
+            if (i % horizontalCount == 0 && i != 0) {
                 line++;
             }
 
-            x = i % 13 * viewWidth / 13 + viewWidth / 13 / 2;
+            x = i % horizontalCount * viewWidth / horizontalCount + viewWidth / horizontalCount / 2;
             tunes.get(i).setBaseline(line * itemHeight + itemHeight / 2 - (scoreFm.bottom - scoreFm.top) / 2);
             tunes.get(i).setX(x);
             tunesCopy.get(i).setBaseline(line * itemHeight + itemHeight / 2 - (scoreFm.bottom - scoreFm.top) / 2);
@@ -518,11 +518,11 @@ public class LyricsView extends View {
                 line = 0;
             }
 
-            if (i % 13 == 0 && i != 0) {
+            if (i % horizontalCount == 0 && i != 0) {
                 line++;
             }
 
-            x = i % 13 * viewWidth / 13 + viewWidth / 13 / 2;
+            x = i % horizontalCount * viewWidth / horizontalCount + viewWidth / horizontalCount / 2;
             lyrics.get(i).setBaseline(line * itemHeight + itemHeight / 2 - (lyricFm.bottom - lyricFm.top) / 2 - lyricFm.top);
             lyrics.get(i).setX(x);
             lyrics.get(i).setLineNum(line);
@@ -542,11 +542,11 @@ public class LyricsView extends View {
                 line = 0;
             }
 
-            if (i % 13 == 0 && i != 0) {
+            if (i % horizontalCount == 0 && i != 0) {
                 line++;
             }
 
-            x = i % 13 * viewWidth / 13 + viewWidth / 13 / 2;
+            x = i % horizontalCount * viewWidth / horizontalCount + viewWidth / horizontalCount / 2;
             tunes.get(i).setBaseline(line * itemHeight + itemHeight / 2 - (scoreFm.bottom - scoreFm.top) / 2);
             tunes.get(i).setX(x);
             tunesCopy.get(i).setBaseline(line * itemHeight + itemHeight / 2 - (scoreFm.bottom - scoreFm.top) / 2);
