@@ -40,7 +40,7 @@
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".MainActivity"
-            android:launchMode="singleInstance"
+            android:launchMode="singleTask"
             android:screenOrientation="portrait"></activity>
         <activity
             android:name=".lyric.LyricActivity"

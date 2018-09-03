@@ -354,30 +354,30 @@ public class FreeActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    @Override
-    public void onWindowFocusChanged(boolean hasFocus) {
-        super.onWindowFocusChanged(hasFocus);
-        if (hasFocus) {
-            int parentHeight = imgParentView.getMeasuredHeight();
-            float imgHeight = parentHeight / 5.0f * 4.0f;
-            float imgWidth = imgHeight / 410.0f * 320.0f;
-            ViewGroup.LayoutParams lp = img.getLayoutParams();
-            lp.width = (int) imgWidth;
-            lp.height = (int) imgHeight;
-            img.setLayoutParams(lp);
-
-            Log.d("123", "imgHeight = " + (int) imgHeight);
-            Log.d("123", "imgWidth = " + (int) imgWidth);
-
-            int guitarParentHeight = guitarParentView.getMeasuredHeight();
-            int guitarWidth = guitarParentView.getMeasuredWidth();
-            ViewGroup.LayoutParams lp1 = guitarImg.getLayoutParams();
-            lp1.width = guitarWidth;
-            lp1.height = guitarParentHeight;
-            guitarImg.setLayoutParams(lp1);
-
-        }
-    }
+//    @Override
+//    public void onWindowFocusChanged(boolean hasFocus) {
+//        super.onWindowFocusChanged(hasFocus);
+//        if (hasFocus) {
+//            int parentHeight = imgParentView.getMeasuredHeight();
+//            float imgHeight = parentHeight / 5.0f * 4.0f;
+//            float imgWidth = imgHeight / 410.0f * 320.0f;
+//            ViewGroup.LayoutParams lp = img.getLayoutParams();
+//            lp.width = (int) imgWidth;
+//            lp.height = (int) imgHeight;
+//            img.setLayoutParams(lp);
+//
+//            Log.d("123", "imgHeight = " + (int) imgHeight);
+//            Log.d("123", "imgWidth = " + (int) imgWidth);
+//
+//            int guitarParentHeight = guitarParentView.getMeasuredHeight();
+//            int guitarWidth = guitarParentView.getMeasuredWidth();
+//            ViewGroup.LayoutParams lp1 = guitarImg.getLayoutParams();
+//            lp1.width = guitarWidth;
+//            lp1.height = guitarParentHeight;
+//            guitarImg.setLayoutParams(lp1);
+//
+//        }
+//    }
 
     @Override
     public boolean onTouch(View v, MotionEvent event) {
