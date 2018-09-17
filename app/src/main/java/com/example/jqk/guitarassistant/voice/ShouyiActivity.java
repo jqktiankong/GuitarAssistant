@@ -1,6 +1,8 @@
 package com.example.jqk.guitarassistant.voice;
 
 import android.content.Intent;
+import android.media.MediaPlayer;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -11,6 +13,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.jqk.guitarassistant.R;
+
+import java.io.IOException;
 
 public class ShouyiActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -55,6 +59,7 @@ public class ShouyiActivity extends AppCompatActivity implements View.OnClickLis
             case R.id.button:
                 if (type == 1) {
                     setType(type);
+                    playSound();
                 }
                 break;
             case R.id.setting:
@@ -62,6 +67,37 @@ public class ShouyiActivity extends AppCompatActivity implements View.OnClickLis
                 intent.setClass(this, SettingActivity.class);
                 startActivity(intent);
                 break;
+        }
+    }
+
+    public void playSound() {
+
+        String uriStr = "android.resource://" + this.getPackageName() + "/";
+        Uri uri = Uri.parse(uriStr + R.raw.abc);
+        final MediaPlayer mediaPlayer = new MediaPlayer();
+        if (mediaPlayer.isPlaying()) {
+            mediaPlayer.reset();//重置为初始状态
+        }
+        try {
+            mediaPlayer.setDataSource(this, uri);
+            mediaPlayer.prepare();//缓冲
+            mediaPlayer.start();//开始或恢复播放
+            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {//播出完毕事件
+                @Override
+                public void onCompletion(MediaPlayer arg0) {
+                    mediaPlayer.release();
+                }
+            });
+            mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {// 错误处理事件
+                @Override
+                public boolean onError(MediaPlayer player, int arg1, int arg2) {
+                    mediaPlayer.release();
+                    return false;
+                }
+            });
+        } catch (IOException e) {
+            e.printStackTrace();
+            mediaPlayer.release();//释放资源
         }
     }
 
